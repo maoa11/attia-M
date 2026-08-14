@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+.DS_Store
+Thumbs.db
+
+# Working files: scraped source data and the raw brand assets used to derive
+# the design system. Nothing here is needed to build the site.
+_source/
+
+# The client's original design exports. The one the site actually uses is
+# committed as public/brand/about.png.
+ChatGPT Image*.png

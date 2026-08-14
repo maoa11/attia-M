@@ -1,0 +1,33 @@
+{
+  "name": "attia-mohamed",
+  "version": "1.0.0",
+  "description": "Portfolio and video case studies for Attia Mohamed — videographer and video editor, Jeddah.",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "media": "node scripts/fetch-media.mjs",
+    "palette": "node scripts/extract-palette.mjs"
+  },
+  "dependencies": {
+    "framer-motion": "^13.0.0",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26",
+    "next": "^16.3.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "postcss": "^8.5.25",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2"
+  }
+}

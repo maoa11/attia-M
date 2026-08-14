@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+/*
+  Design system for Attia Mohamed — videographer, Jeddah.
+
+  The palette is strictly monochrome. That is not a stylistic guess: Attia's own
+  Behance banner is pure black with white wide-tracked type and a faint lens
+  ring, and his profile portrait is a black-and-white studio shot. The only
+  colour on the site comes from the footage itself, which is the point — the
+  page is a darkroom and the work is the light in it.
+*/
+
+@theme {
+  --color-ink: #000000;
+  --color-ink-2: #101012;
+  --color-ink-3: #16161a;
+  --color-paper: #ffffff;
+  /* The one accent, matching the gold used on the Bedeiry site. It marks the
+     things worth noticing — eyebrows, numbers, the WhatsApp button — and
+     nothing else, or it stops meaning anything. */
+  --color-gold: #ffc000;
+
+  --font-display: var(--font-jost), "Helvetica Neue", Arial, sans-serif;
+  --font-editorial: var(--font-instrument), Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-arabic: var(--font-tajawal), "Segoe UI", sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+:root {
+  --paper-dim: rgba(255, 255, 255, 0.62);
+  --paper-faint: rgba(255, 255, 255, 0.38);
+  --paper-ghost: rgba(255, 255, 255, 0.16);
+  --line: rgba(255, 255, 255, 0.12);
+  --line-soft: rgba(255, 255, 255, 0.07);
+
+  /* One gutter value drives every section so the vertical rhythm stays Swiss. */
+  --gutter: clamp(1.25rem, 4.5vw, 5rem);
+  --section-y: clamp(5rem, 12vh, 10rem);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background: var(--color-ink);
+  /* Lenis drives scrolling; native smooth-scroll would fight it. */
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-display);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* No horizontal scrollbar, ever — several sections translate on the X axis. */
+  overflow-x: clip;
+}
+
+[dir="rtl"] body {
+  font-family: var(--font-arabic);
+}
+
+::selection {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------- typography */
+
+.t-display {
+  font-family: var(--font-display);
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  line-height: 0.94;
+}
+
+/* Attia's banner sets the name in light weight at very wide tracking. The
+   optical trick is that tracking has to shrink as the type grows, or huge
+   headlines fall apart into loose letters. */
+.t-hero {
+  font-family: var(--font-display);
+  font-weight: 200;
+  text-transform: uppercase;
+  font-size: clamp(2.4rem, 11vw, 11rem);
+  letter-spacing: clamp(0.06em, 0.5vw, 0.16em);
+  line-height: 0.9;
+}
+
+.t-section {
+  font-family: var(--font-display);
+  font-weight: 200;
+  text-transform: uppercase;
+  font-size: clamp(1.9rem, 6.5vw, 5.5rem);
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.t-editorial {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* Micro-labels: the small mono captions that give the page its technical,
+   shot-list feel. */
+.t-meta {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: clamp(0.62rem, 0.78vw, 0.72rem);
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--paper-faint);
+}
+
+.t-gold {
+  color: var(--color-gold);
+}
+
+.t-body {
+  font-weight: 300;
+  font-size: clamp(0.95rem, 1.1vw, 1.075rem);
+  line-height: 1.75;
+  letter-spacing: 0.005em;
+  color: var(--paper-dim);
+}
+
+[dir="rtl"] .t-display,
+[dir="rtl"] .t-hero,
+[dir="rtl"] .t-section {
+  /* Arabic letterforms connect — wide tracking breaks the joins apart. */
+  letter-spacing: 0;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+[dir="rtl"] .t-meta {
+  letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------- film grain */
+
+/*
+  A single fixed grain plate over the whole document. It is the cheapest way to
+  make flat black read as *film* black rather than as an empty div, and it
+  echoes the noise in Attia's own banner. Pointer-events off so it never eats a
+  click; opacity kept low so it survives on OLED phones without shimmering.
+*/
+.grain {
+  position: fixed;
+  /* Only as much overhang as the drift needs. At -50% this was a composited
+     layer four times the viewport area, competing for GPU memory with the
+     videos. */
+  inset: -12%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  will-change: transform;
+  animation: grain-drift 6s steps(6) infinite;
+}
+
+@keyframes grain-drift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -2%); }
+  80% { transform: translate(3%, 1%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Used by the carousel caption, which is keyed on the centre card so it
+   remounts — and therefore re-runs this — on every step. */
+@keyframes fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------------------------------------------------------- utilities */
+
+.pad-x {
+  padding-inline: var(--gutter);
+}
+
+/* Anything that scales on hover needs its own clipping context, or the video
+   bleeds past the rounded corner during the transform. */
+.clip {
+  overflow: hidden;
+  border-radius: 2px;
+  transform: translateZ(0);
+}
+
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.15em;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* --------------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* The custom cursor replaces the native one only where a real pointer exists;
+   touch devices keep default behaviour entirely. */
+@media (hover: hover) and (pointer: fine) {
+  .cursor-none {
+    cursor: none;
+  }
+}
