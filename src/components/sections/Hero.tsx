@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useLang } from "@/components/providers/LanguageProvider";
 import Aperture from "@/components/ui/Aperture";
 import BigVideo from "@/components/ui/BigVideo";
@@ -15,50 +13,36 @@ import { hero } from "@/data/content";
  * without pillarboxing. Everything else on the site is 9:16 and gets composed
  * for that instead.
  *
- * The name is set the way Attia sets it himself: light weight, all caps, wide
- * tracking, with the lens ring behind it.
+ * The name is set the way Attia sets it himself: all caps, tracked out, with
+ * the lens ring behind it.
+ *
+ * The parallax runs on Framer Motion, which the site already loads, rather than
+ * GSAP + ScrollTrigger — that pairing was left over from the pinned-strip
+ * version of the work section and cost ~150KB of JavaScript for two tweens.
  */
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: root, offset: ["start start", "end start"] });
 
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    // See Work.tsx — the provider's registerPlugin runs after this effect.
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      // The footage drifts up at half speed while the type leaves faster —
-      // enough separation to read as depth, not enough to notice as an effect.
-      gsap.to(".hero-media", {
-        yPercent: 18,
-        scale: 1.08,
-        ease: "none",
-        scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
-      });
-      gsap.to(".hero-type", {
-        yPercent: -26,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
-      });
-    }, root);
-
-    return () => ctx.revert();
-  }, []);
+  // The footage drifts up at half speed while the type leaves faster — enough
+  // separation to read as depth, not enough to notice as an effect.
+  const mediaY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const mediaScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const typeY = useTransform(scrollYProgress, [0, 1], ["0%", "-26%"]);
+  const typeOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
   return (
     <section
       ref={root}
       className="relative flex h-[100svh] min-h-[560px] items-end overflow-hidden"
     >
-      <div className="hero-media absolute inset-0 will-change-transform">
+      <motion.div className="absolute inset-0 will-change-transform" style={{ y: mediaY, scale: mediaScale }}>
         <BigVideo name="istanbul-villa-1" className="opacity-[0.42]" />
         {/* Two scrims: one to seat the type, one to melt the base of the
             section into the section below it. */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/35 to-[#000000]/70" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#000000] to-transparent" />
-      </div>
+      </motion.div>
 
       {/* The ring sits off-centre and enormous, echoing the mark behind his
           name on Behance. */}
@@ -71,7 +55,7 @@ export default function Hero() {
         <Aperture size={420} blades strokeWidth={0.35} className="max-w-[62vw]" />
       </motion.div>
 
-      <div className="hero-type relative z-10 w-full pad-x pb-[max(2.5rem,env(safe-area-inset-bottom))]">
+      <motion.div className="relative z-10 w-full pad-x pb-[max(2.5rem,env(safe-area-inset-bottom))]" style={{ y: typeY, opacity: typeOpacity }}>
         <motion.p
           className="t-meta t-gold !text-[var(--color-gold)] mb-6"
           initial={{ opacity: 0, y: 14 }}
@@ -93,7 +77,7 @@ export default function Hero() {
         >
           <HeroLine />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

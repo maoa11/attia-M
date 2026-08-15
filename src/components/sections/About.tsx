@@ -30,7 +30,7 @@ export default function About() {
       <Reveal className="w-full">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={asset("/brand/about.png")}
+          src={asset("/brand/about.webp")}
           alt={`${site.name} — visual storyteller. Commercials, documentaries and films. 30+ brands, 250+ videos delivered.`}
           width={1686}
           height={933}

@@ -23,4 +23,4 @@ export const bigSrc = (name: string) => asset(`/media/big/${name}.mp4`);
 export const fullSrc = (name: string) => asset(`/media/full/${name}.mp4`);
 
 /** Poster frame. Never let a video show a black first frame. */
-export const posterSrc = (name: string) => asset(`/media/poster/${name}.jpg`);
+export const posterSrc = (name: string) => asset(`/media/poster/${name}.webp`);

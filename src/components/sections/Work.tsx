@@ -29,6 +29,21 @@ export default function Work() {
   const cards = useRef<(HTMLDivElement | null)[]>([]);
   const [current, setCurrent] = useState(0);
   const [cardW, setCardW] = useState(280);
+  // Videos are held back until the page has painted. Seven card files is ~3MB,
+  // and letting them compete with the hero clip, the fonts and the JS made the
+  // whole opening feel sluggish. Posters are already on screen, so the wait is
+  // invisible — the cards simply come alive a moment later.
+  const [videosReady, setVideosReady] = useState(false);
+  useEffect(() => {
+    const idle =
+      window.requestIdleCallback?.(() => setVideosReady(true), { timeout: 2500 }) ??
+      window.setTimeout(() => setVideosReady(true), 1200);
+    return () => {
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idle as number);
+      else window.clearTimeout(idle as number);
+    };
+  }, []);
+
   const swiped = useRef(false);
   const settle = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router = useRouter();
@@ -136,7 +151,7 @@ export default function Work() {
       document.removeEventListener("visibilitychange", onVisible);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current]);
+  }, [current, videosReady]);
 
   const go = useCallback(
     (dir: number) => {
@@ -251,11 +266,13 @@ export default function Work() {
                 className="absolute inset-0 block h-full w-full object-cover"
                 aria-hidden="true"
               />
-              {Math.abs(signedDist(i, current)) <= PLAY_RADIUS && (
+              {videosReady && Math.abs(signedDist(i, current)) <= PLAY_RADIUS && (
                 <video
                   className="relative block h-full w-full object-cover"
                   poster={posterSrc(card.name)}
-                  preload="auto"
+                  // metadata, not auto: play() streams what it needs instead of
+                  // seven files racing to download in full at once.
+                  preload="metadata"
                   muted
                   loop
                   playsInline

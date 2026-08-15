@@ -2,25 +2,21 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
- * Lenis drives the scroll and GSAP's ScrollTrigger is slaved to it, so the
- * pinned sections stay in sync with the eased position instead of drifting a
- * frame behind it.
+ * Lenis eases the scroll; nothing else.
  *
- * Reduced-motion users are left on native scrolling entirely — ScrollTrigger
- * still runs so nothing that depends on it disappears, it just isn't eased.
+ * This used to drive Lenis from GSAP's ticker and keep ScrollTrigger in sync,
+ * back when the work section was a pinned horizontal strip. That section is now
+ * a carousel and the hero's parallax runs on Framer Motion's `useScroll`, so
+ * GSAP had no remaining job — it was ~150KB of JavaScript on every page load
+ * for nothing. Lenis runs its own rAF loop instead.
+ *
+ * Reduced-motion users are left on native scrolling entirely.
  */
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      ScrollTrigger.refresh();
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
       duration: 1.1,
@@ -29,11 +25,12 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       touchMultiplier: 1.5,
     });
 
-    lenis.on("scroll", ScrollTrigger.update);
-
-    const raf = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
+    let frame = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      frame = requestAnimationFrame(raf);
+    };
+    frame = requestAnimationFrame(raf);
 
     // In-page anchors hand off to Lenis so they ease rather than jump.
     const onClick = (e: MouseEvent) => {
@@ -52,7 +49,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     return () => {
       document.removeEventListener("click", onClick);
-      gsap.ticker.remove(raf);
+      cancelAnimationFrame(frame);
       lenis.destroy();
       delete (window as Window & { __lenis?: Lenis }).__lenis;
     };
