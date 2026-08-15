@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Jost, Instrument_Serif, JetBrains_Mono, Tajawal } from "next/font/google";
+import localFont from "next/font/local";
 import LanguageProvider from "@/components/providers/LanguageProvider";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import Cursor from "@/components/ui/Cursor";
@@ -10,39 +10,39 @@ import { site } from "@/data/content";
 import "./globals.css";
 
 /*
-  Jost is the working horse: a geometric sans that, set light and widely
-  tracked, is the closest match to the lockup Attia designed for his own
-  Behance banner. Instrument Serif italic is the one editorial voice allowed
-  in — used for single words, never paragraphs. JetBrains Mono handles the
-  shot-list micro type, and Tajawal carries Arabic.
+  One typeface for the whole site: Thmanyah. It replaced a four-family stack
+  (Jost / Instrument Serif / JetBrains Mono / Tajawal) because those were Latin
+  faces with Arabic bolted on, and the small tracked-out labels broke apart on
+  a phone in Arabic. Thmanyah is drawn for Arabic and Latin together, so both
+  scripts hold at any size.
+
+  Serif Display carries the headlines; Sans carries body copy and the small
+  labels, where a serif at 10px turns to mud.
+
+  Served through next/font/local rather than a hand-written @font-face: Next
+  then owns the emitted URLs, so the base path stays defined in exactly two
+  places instead of three.
 */
-const jost = Jost({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "500"],
-  variable: "--font-jost",
+const display = localFont({
+  src: "../fonts/thmanyah-display.woff2",
+  variable: "--font-display-face",
   display: "swap",
+  // Arabic and Latin both come from this file; no fallback should ever paint.
+  adjustFontFallback: false,
 });
 
-const instrument = Instrument_Serif({
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["italic"],
-  variable: "--font-instrument",
+const sans = localFont({
+  src: "../fonts/thmanyah-sans.woff2",
+  variable: "--font-sans-face",
   display: "swap",
+  adjustFontFallback: false,
 });
 
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-jetbrains",
+const sansMedium = localFont({
+  src: "../fonts/thmanyah-sans-medium.woff2",
+  variable: "--font-sans-medium-face",
   display: "swap",
-});
-
-const tajawal = Tajawal({
-  subsets: ["arabic"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-tajawal",
-  display: "swap",
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       dir="ltr"
-      className={`${jost.variable} ${instrument.variable} ${jetbrains.variable} ${tajawal.variable}`}
+      className={`${display.variable} ${sans.variable} ${sansMedium.variable}`}
       suppressHydrationWarning
     >
       <body>

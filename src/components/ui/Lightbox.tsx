@@ -90,7 +90,7 @@ export default function Lightbox({
             className="t-meta absolute end-[var(--gutter)] top-[max(1.5rem,env(safe-area-inset-top))] !text-white/70 transition-colors hover:!text-white"
             data-cursor={t(ui.close)}
           >
-            {t(ui.close)} ✕
+            {t(ui.close)} ×
           </button>
         </motion.div>
       )}

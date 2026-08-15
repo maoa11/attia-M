@@ -20,10 +20,14 @@
      nothing else, or it stops meaning anything. */
   --color-gold: #ffc000;
 
-  --font-display: var(--font-jost), "Helvetica Neue", Arial, sans-serif;
-  --font-editorial: var(--font-instrument), Georgia, serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-  --font-arabic: var(--font-tajawal), "Segoe UI", sans-serif;
+  /* All four roles resolve to the one typeface — Thmanyah covers Arabic and
+     Latin from the same design, which is why the small labels stopped breaking
+     up on a phone. */
+  --font-display: var(--font-display-face), Georgia, serif;
+  --font-editorial: var(--font-display-face), Georgia, serif;
+  --font-mono: var(--font-sans-medium-face), "Segoe UI", sans-serif;
+  --font-arabic: var(--font-sans-face), "Segoe UI", sans-serif;
+  --font-body: var(--font-sans-face), "Segoe UI", sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
@@ -56,17 +60,15 @@ body {
   margin: 0;
   background: var(--color-ink);
   color: var(--color-paper);
-  font-family: var(--font-display);
-  font-weight: 300;
+  font-family: var(--font-body);
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   /* No horizontal scrollbar, ever — several sections translate on the X axis. */
   overflow-x: clip;
 }
 
-[dir="rtl"] body {
-  font-family: var(--font-arabic);
-}
+/* No per-direction font swap any more — the same family serves both scripts. */
 
 ::selection {
   background: var(--color-paper);
@@ -77,49 +79,52 @@ body {
 
 .t-display {
   font-family: var(--font-display);
-  font-weight: 200;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.22em;
-  line-height: 0.94;
+  letter-spacing: 0.14em;
+  line-height: 1.05;
 }
 
-/* Attia's banner sets the name in light weight at very wide tracking. The
-   optical trick is that tracking has to shrink as the type grows, or huge
-   headlines fall apart into loose letters. */
+/* Tracking shrinks as the type grows, or a huge headline falls apart into
+   loose letters. Arabic drops the tracking entirely below — spacing out a
+   joined script breaks the connections between letterforms. */
 .t-hero {
   font-family: var(--font-display);
-  font-weight: 200;
+  font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(2.4rem, 11vw, 11rem);
-  letter-spacing: clamp(0.06em, 0.5vw, 0.16em);
-  line-height: 0.9;
+  font-size: clamp(2.2rem, 10vw, 10rem);
+  letter-spacing: clamp(0.02em, 0.35vw, 0.09em);
+  line-height: 1;
 }
 
 .t-section {
   font-family: var(--font-display);
-  font-weight: 200;
+  font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(1.9rem, 6.5vw, 5.5rem);
-  letter-spacing: 0.06em;
-  line-height: 1;
+  font-size: clamp(1.8rem, 6vw, 5rem);
+  letter-spacing: 0.04em;
+  line-height: 1.08;
 }
 
 .t-editorial {
   font-family: var(--font-editorial);
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   text-transform: none;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
+  line-height: 1.4;
 }
 
-/* Micro-labels: the small mono captions that give the page its technical,
-   shot-list feel. */
+/* Micro-labels. These are what failed before: 10px Arabic at 0.24em of
+   tracking in a Latin-first face came apart into disconnected letters on a
+   phone. Now the sans cut of the same family, bigger, and barely tracked. */
 .t-meta {
   font-family: var(--font-mono);
   font-weight: 400;
-  font-size: clamp(0.62rem, 0.78vw, 0.72rem);
+  font-size: clamp(0.7rem, 0.8vw, 0.78rem);
   text-transform: uppercase;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
   color: var(--paper-faint);
 }
 
@@ -128,24 +133,23 @@ body {
 }
 
 .t-body {
-  font-weight: 300;
+  font-family: var(--font-body);
+  font-weight: 400;
   font-size: clamp(0.95rem, 1.1vw, 1.075rem);
-  line-height: 1.75;
-  letter-spacing: 0.005em;
+  line-height: 1.8;
+  letter-spacing: 0;
   color: var(--paper-dim);
 }
 
-[dir="rtl"] .t-display,
-[dir="rtl"] .t-hero,
-[dir="rtl"] .t-section {
-  /* Arabic letterforms connect — wide tracking breaks the joins apart. */
+[dir=rtl] .t-display,
+[dir=rtl] .t-hero,
+[dir=rtl] .t-section {
   letter-spacing: 0;
-  font-weight: 400;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
-[dir="rtl"] .t-meta {
-  letter-spacing: 0.08em;
+[dir=rtl] .t-meta {
+  letter-spacing: 0;
 }
 
 /* --------------------------------------------------------------- film grain */

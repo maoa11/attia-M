@@ -131,13 +131,10 @@ function HeroName() {
 }
 
 function HeroLine() {
-  const { t, lang } = useLang();
+  const { t } = useLang();
+  // One family now serves both scripts, so the same class applies either way.
   return (
-    <p
-      className={`max-w-[34ch] text-[clamp(1.05rem,2vw,1.6rem)] leading-snug text-white/80 ${
-        lang === "en" ? "t-editorial" : "font-normal"
-      }`}
-    >
+    <p className="t-editorial max-w-[34ch] text-[clamp(1.05rem,2vw,1.6rem)] text-white/80">
       {t(hero.line)}
     </p>
   );
