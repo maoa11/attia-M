@@ -1,5 +1,5 @@
-:HL["/attia-M/next/static/chunks/1f2fuw12irkmx.css","style"]
+:HL["/attia-M/next/static/chunks/2u9pwpaop07jx.css","style"]
 :HL["/attia-M/next/static/media/thmanyah_display.p.37-bee8ms4atz.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/attia-M/next/static/media/thmanyah_sans.p.0o0gt2g3ym172.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/attia-M/next/static/media/thmanyah_sans_medium.p.1bmepgtgqpy4i.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"work","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"gurkan-steakhouse","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"8VYiVBhJI3scdnq1sp03P"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"work","param":null,"prefetchHints":4192,"slots":{"children":{"name":"slug","param":{"type":"d","key":"gurkan-steakhouse","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"u2DHyZ7qqC8vVBGiR9zDR"}
