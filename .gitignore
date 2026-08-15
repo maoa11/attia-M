@@ -14,3 +14,7 @@ _source/
 # The client's original design exports. The one the site actually uses is
 # committed as public/brand/about.png.
 ChatGPT Image*.png
+
+# The built site at the repo root is what GitHub Pages serves, and it already
+# contains these files under media/. Tracking them twice would double the repo.
+/public/media/
